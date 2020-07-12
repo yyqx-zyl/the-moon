@@ -1,0 +1,11 @@
+eclipse.preferences.version=1
+encoding//WebContent/client/film.jsp=UTF-8
+encoding//resourse/database.properties=UTF-8
+encoding//resourse/log4j.properties=UTF-8
+encoding//src/cn/marry/controller/client/UserController.java=UTF-8
+encoding//src/cn/marry/controller/server/CraftsmanManager.java=UTF-8
+encoding//src/cn/marry/controller/server/Pro_designercontroller.java=UTF-8
+encoding//src/cn/marry/controller/server/Pro_dresscontroller.java=UTF-8
+encoding//src/cn/marry/controller/server/Pro_marrycontroller.java=UTF-8
+encoding//src/cn/marry/controller/server/RealPhotoManager.java=UTF-8
+encoding//src/cn/marry/dao/ProdressMapper.java=UTF-8

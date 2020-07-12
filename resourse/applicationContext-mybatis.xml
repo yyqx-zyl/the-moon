@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xmlns:tx="http://www.springframework.org/schema/tx"
+    xmlns:p="http://www.springframework.org/schema/p"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+        https://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        https://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/aop
+        https://www.springframework.org/schema/aop/spring-aop.xsd
+        http://www.springframework.org/schema/tx
+        https://www.springframework.org/schema/tx/spring-tx.xsd">
+    <!-- 1。将dao和service层都交给spring进行管理 -->
+    <!-- <context:component-scan base-package="org.student.dao"/>
+    <context:component-scan base-package="org.student.service"/> -->
+    
+    <context:component-scan base-package="cn.marry">
+    	<!-- 因为controller的内容是由springmvc进行管理 -->
+    	<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+    
+    <!-- 2、读取数据源配置文件 -->
+    <context:property-placeholder location="classpath:database.properties"/>
+    
+    <!-- 3、读取数据源配置文件，配置数据源 -->
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+    	<property name="driverClass" value="${jdbc.driver}"/>
+    	<property name="jdbcUrl" value="${jdbc.url}"/>
+    	<property name="user" value="${jdbc.user}"/>
+    	<property name="password" value="${jdbc.password}"/>
+    </bean>
+    
+    <!-- 4、SqlSessionFactoryBean -->
+    <bean id="sqlSessionFactoryBean" class="org.mybatis.spring.SqlSessionFactoryBean">
+    	<!-- 配置数据源 -->
+    	<property name="dataSource" ref="dataSource"/>
+    	<!-- 为实体类设置别名 -->
+    	<property name="typeAliasesPackage" value="cn.marry.pojo"/>
+    	<!-- 指定mapper文件的位置(与数据库表相映射的xml) -->
+    	<property name="mapperLocations" value="classpath:mapper/*.xml"/>
+    	<property name="plugins">
+    		<array>
+    			<bean class="com.github.pagehelper.PageInterceptor">
+    				<!-- 通过配置文件的形式给值 -->
+    				<property name="properties">
+    					<props>
+    					<!-- helperDialect：告诉spring容器我们采用哪一种数据库 -->
+    						<prop key="helperDialect">mysql</prop>
+    						<!-- reasonable：分页合理化参数，默认值为 false 。当该参数设置为 true 时， 
+    						pageNum<=0 时会查询第一 页， 
+            				pageNum>pages （超过总数时），会查询最后一页。
+            				默认 false 时，直接根据参数进行查询。 -->
+    						<prop key="reasonable">true</prop>
+    					</props>
+    				</property>
+    			</bean>
+    		</array>
+    	</property>
+    </bean>
+    
+    <!-- 5、扫描所有的dao层方法 -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+    	<!-- 指定dao所在的包路径 -->
+    	<property name="basePackage" value="cn.marry.dao"/>
+    	<!-- 指定一个SqlSessionFactoryBean的名称 -->
+    	<property name="sqlSessionFactoryBeanName" value="sqlSessionFactoryBean"/>
+    </bean>
+    
+    <!-- 6、配置事务增强的bean -->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+    	<property name="dataSource" ref="dataSource"/>
+    </bean>
+    
+    <!-- 7、配置事务 -->
+    <tx:advice id="txAdvice">
+    	<!-- 定义为哪些方法进行事务的增强控制 -->
+    	<tx:attributes>
+    		<tx:method name="*" propagation="REQUIRED"/>
+    		<tx:method name="save*" propagation="REQUIRED"/>
+    	</tx:attributes>
+    </tx:advice>
+    
+    <!-- 8、配置切面 -->
+    <aop:config>
+    	<!-- 在什么位置添加事务增强 -->
+    	<aop:pointcut expression="execution(* cn.marry..*(..))" id="myPointcut"/>
+    	<!-- 将切入点和事务增强继续集成 -->
+    	<aop:advisor advice-ref="txAdvice" pointcut-ref="myPointcut"/>
+    </aop:config>
+</beans>        

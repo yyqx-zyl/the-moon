@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.marry.dao.PromarryMapper">
+	<insert id="updateByPrimaryKey" parameterType="Promarry">
+    update pro_marry  set 
+   	<if test="mname!=null">
+   		mName = #{mname},
+   	</if>
+   	<if test="mdesc!=null">
+   		 mDesc = #{mdesc},
+   	</if>
+   	<if test="mprice!=null">
+   		 mprice = #{mprice},
+   	</if>
+   	<if test="idpicpath">
+   		idPicPath = #{idpicpath}, 
+   	</if>
+    	modifyDate = #{modifydate},  modifyBy = #{modifyby}
+    	where mid = #{mid}
+	</insert>
+	
+</mapper>

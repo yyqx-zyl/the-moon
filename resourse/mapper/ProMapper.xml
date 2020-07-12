@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.marry.dao.ProMapper">
+ <select id="findById" resultMap="blist">
+  		select b.*,c.* from pro b
+		inner join category c on (b.categoryid=c.caid)
+   	
+   		<where>
+   			<if test="caid!=0">
+   				and b.categoryid=#{caid}
+   			</if>
+   			<if test="caid==0">
+   				and 1=1
+   			</if>
+   		</where>
+  </select>
+
+<resultMap type="Pro" id="blist" autoMapping="true">
+		<association property="cate" javaType="Category">
+			<result column="cname" property="cname"/>
+		</association>
+	</resultMap>
+</mapper>

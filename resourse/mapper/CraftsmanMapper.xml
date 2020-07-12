@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.marry.dao.CraftsmanMapper">
+	<update id="updateByPrimaryKey" parameterType="Craftsman">
+    update craftsman  set 
+    <if test="cName!=null">
+   		cName = #{cName},
+   	</if>
+   	<if test="cAge!=null">
+   		 cAge = #{cAge},
+   	</if>
+   	<if test="cSkill!=null">
+   		cSkill = #{cSkill},
+   	</if>
+   	<if test="cDescribe!=null">
+   		 cDescribe = #{cDescribe},
+   	</if>
+   	<if test="cPath">
+   		cPath = #{cPath},
+   	</if>
+    	modifyBy=#{modifyBy} where cId = #{cId}
+	</update>
+	
+</mapper>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.marry.dao.CommentMapper">
+ <select id="selectAll" resultMap="blist">
+  		select b.*,c.* from comment b
+		inner join blog c on (b.blogid=c.bid)
+   	    where b.blogid=#{bid}
+   		
+  </select>
+
+<resultMap type="Comment" id="blist" autoMapping="true">
+		<association property="blog" javaType="Blog"/>
+	</resultMap>
+	
+	<insert id="insert">
+		insert into comment(cid,uid,comimg,comname,creationDate,upgood,downbad,comdesc,ruid,blogid)
+		values (#{cid},#{uid},#{comimg},#{comname},#{creationDate},#{upgood},#{downbad},#{comdesc},#{ruid},#{blogid})
+	</insert>
+	
+ <select id="selectAnComment" resultMap="clist">
+  		select b.anid,b.ruid,b.comimg,b.comname,b.creationDate,b.ancomdesc,c.* from ancomment b
+		left join comment c on (b.ruid=c.ruid)
+   	   where b.ruid=#{ruid}
+  </select>
+
+<resultMap type="AnComment" id="clist" autoMapping="true">
+		<association property="com" javaType="Comment">
+		<id column="ruid" property="ruid"/>
+		</association>
+</resultMap>
+
+<insert id="insertAncomment">
+		insert into ancomment(anid,ruid,comimg,comname,creationDate,ancomdesc)
+		values (#{anid},#{ruid},#{comimg},#{comname},#{creationDate},#{ancomdesc})
+	</insert>
+
+</mapper>

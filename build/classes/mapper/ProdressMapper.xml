@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.marry.dao.ProdressMapper">
+ 
+  <delete id="deletePro">
+    delete from pro_dress  where pid = #{pid}
+  </delete>
+  <insert id="addPro">
+    insert into pro_dress (pid,dName,dDesc,dprice,idPicPath,createdBy,creationDate)
+    values (#{pid}, #{dname},#{ddesc}, #{dprice},#{idpicpath},#{createdby},#{creationdate})
+  </insert>
+  <update id="updatePro">
+    update pro_dress   set
+    <if test="dname!=null">
+    	dName = #{dname},
+    </if>
+    <if test="ddesc!=null">
+    	 dDesc = #{ddesc},
+    </if> 
+    <if test="dprice!=null">
+   		 dprice = #{dprice},
+    </if>
+    <if test="idpicpath!=null">
+    	idPicPath = #{idpicpath},
+    </if>
+     modifyDate = #{modifydate},modifyBy = #{modifyby}  
+    where pid = #{pid}
+  </update>
+	<select id="findById" resultType="Prodress">
+	 select pid, dName, dDesc, dprice, idPicPath, createdBy, creationDate, modifyDate,modifyBy from pro_dress where pid = #{pid} 
+	</select>
+ 
+  <select id="getProList" resultType="Prodress">
+    select pid, dName, dDesc, dprice, idPicPath, createdBy, creationDate, modifyDate, modifyBy 
+    from pro_dress
+  </select>
+</mapper>
